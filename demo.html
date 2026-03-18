@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABG0lEQVR4nGNkQANcQhz/0cWoDb69+8EIYzPR23J0e5iwCdLTEYwDYTkyYBpIyxkY0NLAqAMGArDgk1TZlYkhdsdtOl4DSdWDMwRk50TgtYgUgM8svFHw89F7ii0nZAbBNPDz0Xu4IYSCH1kNsj58AGcaeJyygoGBAXucEgPY5QRRHIQLMBJTEOFyBMxwQvL4wIBnQ6IcQIxPyNVDlAPISQfE6iE7CpB9SE4IUewAagGyHYAcxORmVQYGAnUBDKAHMSXZjiwH4AKU+BwGyIoCbD4lNyFSnAjfrLtJkX6iimJcQCDDCc7+MGMfWWZQFAIwS8m1nIGBwhCgBhi6BRHVHIDcURwQBzAwoPZW6Qm+vfvByITMobflDAwMDAD8UGO2RUdmNwAAAABJRU5ErkJggg==">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — Verdant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green:#1a7a4a;--green-light:#2ecc71;--green-pale:#e8f5ee;
+    --dark:#0a1208;--dark2:#111d15;--dark3:#1a2d1e;
+    --gray:#6b7d72;--gray-light:#f0f4f1;--white:#ffffff;--border:#d4e2d9;
+    --sol:#9945FF;--font-head:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Courier New',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-body);color:var(--dark);background:var(--dark);min-height:100vh;}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px;background:rgba(10,18,8,0.95);border-bottom:1px solid rgba(255,255,255,0.07);}
+  .nav-back{display:flex;align-items:center;gap:6px;text-decoration:none;color:rgba(255,255,255,0.4);font-size:14px;transition:color 0.2s;}
+  .nav-back:hover{color:var(--green-light);}
+  .nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+  .logo-mark{width:28px;height:28px;background:var(--dark3);border-radius:7px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.08);}
+  .logo-mark svg{width:16px;height:16px;}
+  .nav-logo span{font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--white);}
+  .token-pill{font-size:11px;font-weight:700;color:var(--sol);background:rgba(153,69,255,0.12);border:1px solid rgba(153,69,255,0.25);padding:4px 10px;border-radius:100px;}
+
+  .demo-header{text-align:center;padding:3rem 2rem 2rem;background:var(--dark);}
+  .demo-header h1{font-family:var(--font-head);font-size:2.25rem;font-weight:800;color:var(--white);margin-bottom:0.5rem;letter-spacing:-0.025em;}
+  .demo-header p{color:rgba(255,255,255,0.4);font-size:15px;font-weight:300;}
+
+  .demo-controls{display:flex;gap:10px;justify-content:center;margin-bottom:1.5rem;}
+  .btn-play{background:var(--green-light);color:var(--dark);border:none;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-body);display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;}
+  .btn-play:hover{background:#27d96b;}
+  .btn-reset{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.12);padding:10px 24px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;}
+  .btn-reset:hover{border-color:rgba(255,255,255,0.25);}
+
+  .step-dots{display:flex;gap:8px;justify-content:center;margin-bottom:2rem;}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.12);cursor:pointer;transition:all 0.3s;}
+  .dot.active{background:var(--green-light);width:24px;border-radius:4px;}
+
+  .demo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;max-width:1200px;margin:0 auto;padding:0 1.5rem;background:rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;}
+
+  .demo-card{background:var(--dark2);}
+  .card-header{padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:8px;}
+  .card-header-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;}
+  .card-header h3{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--white);}
+  .card-body{padding:1.25rem;}
+
+  .plant-visual{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.25rem;display:flex;flex-direction:column;align-items:center;margin-bottom:1rem;min-height:200px;}
+  .grow-light{width:80px;height:8px;border-radius:4px;background:#222;margin-bottom:6px;position:relative;}
+  .grow-light.on::after{content:'';position:absolute;bottom:-4px;left:8px;right:8px;height:3px;background:rgba(255,200,0,0.7);border-radius:2px;}
+  .light-label{font-size:10px;color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:10px;margin-bottom:16px;font-family:var(--font-mono);}
+  .plant-row{display:flex;align-items:flex-end;gap:20px;justify-content:center;}
+  .device-pump{display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .d-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:16px;border:1px solid rgba(255,255,255,0.08);}
+  .d-label{font-size:10px;color:rgba(255,255,255,0.3);}
+  .plant-svg{width:80px;height:100px;}
+  .sensor-bar{width:8px;height:60px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;position:relative;}
+  .sensor-fill{position:absolute;bottom:0;width:100%;background:var(--green);border-radius:4px;transition:height 1s ease;}
+  .fan-circle{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.3s;}
+  .fan-circle.spinning{animation:spin 0.8s linear infinite;}
+  @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+  .sensor-readings{display:flex;gap:6px;flex-wrap:wrap;margin-top:1rem;}
+  .reading{padding:5px 10px;border-radius:7px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:4px;font-family:var(--font-mono);}
+  .reading-temp{background:rgba(255,100,0,0.15);color:#ff9060;}
+  .reading-hum{background:rgba(100,150,255,0.15);color:#90b4ff;}
+  .reading-soil{background:rgba(46,204,113,0.15);color:var(--green-light);}
+  .reading-light{background:rgba(255,220,0,0.15);color:#ffd860;}
+
+  .flow-steps{display:flex;flex-direction:column;gap:0;}
+  .flow-item{padding:10px 0;display:flex;align-items:flex-start;gap:10px;position:relative;}
+  .flow-item:not(:last-child)::after{content:'';position:absolute;left:18px;top:42px;bottom:-10px;width:1px;background:rgba(255,255,255,0.07);}
+  .flow-dot{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all 0.3s;border:1px solid rgba(255,255,255,0.06);}
+  .flow-dot.inactive{background:rgba(255,255,255,0.03);}
+  .flow-dot.active{background:rgba(46,204,113,0.12);border-color:rgba(46,204,113,0.25);}
+  .flow-content h4{font-size:13px;font-weight:600;margin-bottom:2px;color:var(--white);}
+  .flow-content p{font-size:11px;color:rgba(255,255,255,0.3);}
+  .mqtt-terminal{background:#060e08;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px;margin-top:8px;font-family:var(--font-mono);font-size:11px;color:var(--green-light);min-height:60px;}
+  .mqtt-line{opacity:0;animation:fadeIn 0.3s forwards;}
+  @keyframes fadeIn{to{opacity:1}}
+
+  .preset-badge{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;margin-bottom:1rem;}
+  .preset-name{font-size:12px;font-weight:600;color:var(--white);}
+  .preset-tag{font-size:11px;background:rgba(46,204,113,0.15);color:var(--green-light);padding:2px 8px;border-radius:4px;font-weight:600;}
+  .preset-details{font-size:11px;color:rgba(255,255,255,0.3);}
+  .ai-terminal{background:#060e08;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;min-height:120px;font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:1rem;}
+  .ai-status-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.15);display:inline-block;margin-right:5px;}
+  .ai-status-dot.active{background:var(--green-light);animation:blink 1.5s infinite;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+  .ai-considers{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+  .consider-item{font-size:11px;}
+  .consider-label{color:rgba(255,255,255,0.3);}
+  .consider-val{color:var(--white);font-weight:500;}
+
+  .chain-badge{display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(153,69,255,0.1);border:1px solid rgba(153,69,255,0.2);border-radius:7px;margin-top:8px;font-size:11px;color:#c084fc;font-family:var(--font-mono);}
+
+  .step-info{max-width:1200px;margin:1.5rem auto 0;padding:0 1.5rem 2rem;}
+  .step-card{background:var(--dark2);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;text-align:center;}
+  .step-badge{font-size:11px;font-weight:700;color:var(--green-light);background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.2);padding:4px 12px;border-radius:100px;margin-bottom:0.75rem;}
+  .step-card h2{font-family:var(--font-head);font-size:1.35rem;font-weight:800;color:var(--white);margin-bottom:0.5rem;}
+  .step-card p{color:rgba(255,255,255,0.4);font-size:14px;max-width:500px;line-height:1.65;font-weight:300;}
+
+  .demo-cta{text-align:center;padding:2rem 2rem 3rem;}
+  .btn-cta{background:var(--green-light);color:var(--dark);border:none;padding:13px 28px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+  .btn-cta:hover{background:#27d96b;transform:translateY(-1px);}
+
+  @media(max-width:900px){.demo-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">← Home</a>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-mark" style="background:none;border:none;"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAB4klEQVR4nO2asU7DMBCG/0RIRUyUvZ14EgaeoQ+QAZ4Ihj5AJh6AgfdAYmpW1DJV7QSTkXEcx47vLtjJN1VOcuc///lsVSngwdXN5bfPfWNw3J8K13Xnxf8szKRLqHUwJWEmptDSvCFlcUB7/qXrYqroOkrbYA4oPa0SzY0CyM89newdLHN2D5iCg2NPgJvsBV4Meej29dE6ft4d0FR11IRW2w0W66X12sf9U3A8Uge7JiYdQ6cI6aKr7cZrEkPeNNBdGYrz7gAAQVUyyEGVSJKhOb0FKvf6Eg51z/Wsmcuci4tBTcaWOLa5KJTIEBEuSJoMdWOgjOktsKnqPy41VY3FeskiTqHim3lDqiWoi9rQO1/M+uOKmf1JJtpBoP3Gzf2sywXbfdQVQe6gbbOOGYuFRCDV2uOImf0aJBHIUVpUMUUctJUbR1nbiBbI4R5lbHYHXU5JuDg3mdRhEaiXnmsdcZxjTUiOal0oAX1HNc61KFKiUscyG6wCfZzh7qRiTUZ3TMo9YAL7YNSfTqFIOqeYz6LUfL68i+Zj3QdNrh/ufn9/Pb+J5BR1UImSEgcIOzgG82E7dfIX2Pe9Zerk7yDQ/9Vsqhz3p2IaDgL5uaj0lLbB1NF1tEo0dZHm/LP/6v4H43i+6qmFxcUAAAAASUVORK5CYII=" style="width:32px;height:32px;" alt="Verdant"></div>
+    <span>Verdant</span>
+  </a>
+  <span class="token-pill">$VRDT on Solana</span>
+</nav>
+
+<div class="demo-header">
+  <h1>How Verdant Works</h1>
+  <p>An interactive walkthrough of autonomous AI plant care on Solana</p>
+</div>
+
+<div class="demo-controls">
+  <button class="btn-play" id="playBtn" onclick="togglePlay()">▶ Play Demo</button>
+  <button class="btn-reset" onclick="resetDemo()">↺ Reset</button>
+</div>
+
+<div class="step-dots" id="stepDots">
+  <div class="dot active" onclick="goToStep(0)"></div>
+  <div class="dot" onclick="goToStep(1)"></div>
+  <div class="dot" onclick="goToStep(2)"></div>
+  <div class="dot" onclick="goToStep(3)"></div>
+  <div class="dot" onclick="goToStep(4)"></div>
+  <div class="dot" onclick="goToStep(5)"></div>
+  <div class="dot" onclick="goToStep(6)"></div>
+</div>
+
+<div class="demo-grid">
+  <!-- PLANT SETUP -->
+  <div class="demo-card">
+    <div class="card-header">
+      <div class="card-header-icon" style="background:rgba(46,204,113,0.12)">🌱</div>
+      <h3>Your Plant Setup</h3>
+    </div>
+    <div class="card-body">
+      <div class="plant-visual">
+        <div class="grow-light" id="growLight"></div>
+        <div class="light-label" id="lightLabel">0 OFF</div>
+        <div class="plant-row">
+          <div class="device-pump">
+            <div class="d-icon" id="pumpIcon">💧</div>
+            <div class="d-label">Pump</div>
+          </div>
+          <svg class="plant-svg" viewBox="0 0 80 100" fill="none">
+            <rect x="20" y="70" width="40" height="28" rx="4" fill="#8B6914"/>
+            <rect x="24" y="66" width="32" height="8" rx="2" fill="#A07820"/>
+            <path d="M40 65V35" stroke="#4CAF80" stroke-width="3" stroke-linecap="round"/>
+            <ellipse cx="40" cy="28" rx="12" ry="10" fill="#2ecc71"/>
+            <path d="M40 40C40 40 28 36 24 28" stroke="#1a7a4a" stroke-width="1.5"/>
+            <path d="M40 38C40 38 52 32 54 24" stroke="#1a7a4a" stroke-width="1.5"/>
+            <ellipse cx="28" cy="32" rx="8" ry="6" fill="#27ae60"/>
+            <ellipse cx="52" cy="28" rx="8" ry="6" fill="#27ae60"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div class="sensor-bar"><div class="sensor-fill" id="soilBar" style="height:28%"></div></div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3)">Soil</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div class="fan-circle" id="fanIcon">🌀</div>
+            <div class="d-label">Fan</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;margin-top:10px">
+          <div style="width:44px;height:28px;background:#1a2d1e;border-radius:4px;border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center">
+            <svg width="20" height="14" viewBox="0 0 24 16"><rect width="24" height="16" rx="2" fill="#1a2d1e"/><rect x="2" y="2" width="4" height="12" rx="1" fill="#2ecc71" opacity="0.5"/><rect x="8" y="4" width="3" height="8" rx="1" fill="#2ecc71" opacity="0.3"/></svg>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px">Pi / ESP32</div>
+        </div>
+      </div>
+      <div class="sensor-readings">
+        <span class="reading reading-temp" id="readTemp">🌡 22.5°C</span>
+        <span class="reading reading-hum" id="readHum">💧 45%</span>
+        <span class="reading reading-soil" id="readSoil">🌱 28%</span>
+        <span class="reading reading-light" id="readLight">☀ 3500lx</span>
+      </div>
+      <div class="chain-badge" id="chainBadge" style="opacity:0">⬡ Logged on Solana · block #—</div>
+    </div>
+  </div>
+
+  <!-- DATA FLOW -->
+  <div class="demo-card">
+    <div class="card-header">
+      <div class="card-header-icon" style="background:rgba(100,150,255,0.12)">⚡</div>
+      <h3>Data Flow</h3>
+    </div>
+    <div class="card-body">
+      <div class="flow-steps">
+        <div class="flow-item">
+          <div class="flow-dot inactive" id="flow0">📡</div>
+          <div class="flow-content"><h4>Raspberry Pi / ESP32</h4><p>Collects & transmits sensor data</p></div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot inactive" id="flow1">🔌</div>
+          <div class="flow-content">
+            <h4>MQTT Protocol</h4>
+            <p>test.mosquitto.org:1883</p>
+            <div class="mqtt-terminal" id="mqttTerminal"><span style="color:rgba(255,255,255,0.2)">Waiting for messages...</span></div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot inactive" id="flow2">☁️</div>
+          <div class="flow-content"><h4>Verdant Cloud</h4><p>PostgreSQL · on-chain logging</p></div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot inactive" id="flow3">🤖</div>
+          <div class="flow-content"><h4>Claude AI</h4><p>Analyzes & decides autonomously</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI BRAIN -->
+  <div class="demo-card">
+    <div class="card-header">
+      <div class="card-header-icon" style="background:rgba(153,69,255,0.12)">🧠</div>
+      <h3>AI Brain (Claude)</h3>
+    </div>
+    <div class="card-body">
+      <div class="preset-badge">
+        <div>
+          <div class="preset-name">Care Preset</div>
+          <div class="preset-details">Moisture: 35–65% · Light: ≥5000 lux</div>
+        </div>
+        <span class="preset-tag">Tropical</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:8px">
+        <span class="ai-status-dot" id="aiDot"></span>
+        <span id="aiStatusText">Waiting for data</span>
+      </div>
+      <div class="ai-terminal" id="aiTerminal"><span style="color:rgba(255,255,255,0.2)">awaiting sensor data...</span></div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-bottom:8px;font-weight:600;letter-spacing:0.04em">AI CONSIDERS</p>
+      <div class="ai-considers">
+        <div class="consider-item"><div class="consider-label">Plant species</div><div class="consider-val" id="c1">—</div></div>
+        <div class="consider-item"><div class="consider-label">Growth stage</div><div class="consider-val" id="c2">—</div></div>
+        <div class="consider-item"><div class="consider-label">Care thresholds</div><div class="consider-val" id="c3">—</div></div>
+        <div class="consider-item"><div class="consider-label">Past actions</div><div class="consider-val" id="c4">—</div></div>
+        <div class="consider-item"><div class="consider-label">Time of day</div><div class="consider-val" id="c5">—</div></div>
+        <div class="consider-item"><div class="consider-label">Watering history</div><div class="consider-val" id="c6">—</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="step-info">
+  <div class="step-card">
+    <div class="step-badge" id="stepBadge">Step 1 of 7</div>
+    <h2 id="stepTitle">Sensors Collect Data</h2>
+    <p id="stepDesc">Temperature, humidity, soil moisture, and light sensors continuously monitor your plant's environment and transmit readings every 30 seconds.</p>
+  </div>
+</div>
+
+<div class="demo-cta">
+  <p style="color:rgba(255,255,255,0.3);font-size:14px;margin-bottom:1rem">Ready to automate your plant care?</p>
+  <a href="index.html" class="btn-cta">Get Started Free →</a>
+</div>
+
+<script>
+const steps = [
+  { title:"Sensors Collect Data", desc:"Temperature, humidity, soil moisture, and light sensors continuously monitor your plant's environment and transmit readings every 30 seconds.", flows:[], action:'init' },
+  { title:"Hardware Publishes via MQTT", desc:"Your Raspberry Pi or ESP32 publishes JSON sensor readings to an MQTT broker. Every message is timestamped and queued for AI analysis.", flows:[0,1], mqttLines:["> Connected to test.mosquitto.org",'> Publishing: sprout/plant_1/sensors','{"temperature":22.5,"humidity":45,"soilMoisture":28,"lightLevel":3500}'], action:'mqtt' },
+  { title:"Data Stored On-Chain", desc:"Every reading is stored in PostgreSQL and logged on Solana for full auditability. Anyone can verify your plant's care history.", flows:[0,1,2], action:'cloud' },
+  { title:"Claude AI Analyzes", desc:"Claude receives sensor data and cross-references it against your plant profile, growth stage, and historical care logs.", flows:[0,1,2,3], aiLines:[{cls:'t-g',text:'[Analysis] Checking plant conditions...'},{cls:'t-w',text:'Soil moisture: 28% (below threshold 35%)'},{cls:'t-y',text:'⚠ Plant requires watering'}], action:'analyze' },
+  { title:"AI Makes a Decision", desc:"Based on species, growth stage, time of day, and watering history — the AI calculates the optimal action with safety limits applied.", flows:[0,1,2,3], aiLines:[{cls:'t-g',text:'[Decision] Calculating water dose...'},{cls:'t-w',text:'Temp: 22.5°C · VPD normal · Daytime'},{cls:'t-g',text:'✓ Activate pump for 3 seconds'},{cls:'t-y',text:'✓ Boost light to 5000 lux'}], action:'decide' },
+  { title:"Command Sent to Hardware", desc:"Verdant sends an action command back to your hardware via a dedicated MQTT topic. The device executes it within milliseconds.", flows:[0,1,2,3], mqttLines2:['> Subscribe: sprout/plant_1/actions','> Received: {"action":"water","duration":3}','> Received: {"action":"light_on","level":5000}'], action:'command' },
+  { title:"Plant Cared For. Autonomously.", desc:"Pump waters, lights adjust, fan controls ventilation — all without you doing a thing. The action is logged on-chain and treasury funds the AI that made it happen.", flows:[0,1,2,3], aiLines:[{cls:'t-g',text:'[Done] Actions executed successfully'},{cls:'t-w',text:'Pump: 3s activated · Watered ✓'},{cls:'t-g',text:'Soil moisture projected → ~38%'},{cls:'t-w',text:'Next analysis in: 30 minutes'}], action:'done' }
+];
+
+let currentStep=0,isPlaying=false,playInterval=null;
+
+function updateStep(i){
+  currentStep=i;
+  const s=steps[i];
+  document.querySelectorAll('.dot').forEach((d,idx)=>d.className='dot'+(idx===i?' active':''));
+  document.getElementById('stepBadge').textContent=`Step ${i+1} of 7`;
+  document.getElementById('stepTitle').textContent=s.title;
+  document.getElementById('stepDesc').textContent=s.desc;
+  document.querySelectorAll('[id^="flow"]').forEach((el,idx)=>el.className='flow-dot '+(s.flows&&s.flows.includes(idx)?'active':'inactive'));
+  if(s.action==='init') resetVisuals();
+  else if(s.action==='mqtt'&&s.mqttLines) animateMQTT(s.mqttLines);
+  else if(s.action==='cloud'){
+    document.getElementById('chainBadge').style.opacity='1';
+    document.getElementById('chainBadge').textContent='⬡ Logged on Solana · block #'+Math.floor(Math.random()*9999999+200000000);
+  }
+  else if(s.action==='analyze') updateAI('active','Analyzing...',s.aiLines);
+  else if(s.action==='decide'){updateAI('active','Deciding',s.aiLines);updateConsiders('Cherry Tomato','Vegetative','Soil: 35%','2h ago','09:45 AM','2x today');}
+  else if(s.action==='command') animateMQTT(s.mqttLines2||[]);
+  else if(s.action==='done'){
+    updateAI('active','Done ✓',s.aiLines);
+    document.getElementById('growLight').classList.add('on');
+    document.getElementById('lightLabel').textContent='5000 LUX';
+    document.getElementById('fanIcon').classList.add('spinning');
+    document.getElementById('soilBar').style.height='38%';
+    document.getElementById('readSoil').textContent='🌱 38%';
+    document.getElementById('readLight').textContent='☀ 5000lx';
+  }
+}
+
+function resetVisuals(){
+  document.getElementById('growLight').classList.remove('on');
+  document.getElementById('lightLabel').textContent='0 OFF';
+  document.getElementById('fanIcon').classList.remove('spinning');
+  document.getElementById('soilBar').style.height='28%';
+  document.getElementById('readTemp').textContent='🌡 22.5°C';
+  document.getElementById('readHum').textContent='💧 45%';
+  document.getElementById('readSoil').textContent='🌱 28%';
+  document.getElementById('readLight').textContent='☀ 3500lx';
+  document.getElementById('mqttTerminal').innerHTML='<span style="color:rgba(255,255,255,0.2)">Waiting for messages...</span>';
+  document.getElementById('aiTerminal').innerHTML='<span style="color:rgba(255,255,255,0.2)">awaiting sensor data...</span>';
+  document.getElementById('aiDot').className='ai-status-dot';
+  document.getElementById('aiStatusText').textContent='Waiting for data';
+  document.getElementById('chainBadge').style.opacity='0';
+  ['c1','c2','c3','c4','c5','c6'].forEach(id=>document.getElementById(id).textContent='—');
+}
+
+function animateMQTT(lines){
+  const term=document.getElementById('mqttTerminal');
+  term.innerHTML='';
+  lines.forEach((line,i)=>setTimeout(()=>{
+    const d=document.createElement('div');
+    d.className='mqtt-line';
+    d.style.color=line.startsWith('>')? '#2ecc71':'rgba(255,255,255,0.6)';
+    d.textContent=line; term.appendChild(d);
+  },i*350));
+}
+
+function updateAI(status,statusText,lines){
+  document.getElementById('aiDot').className='ai-status-dot'+(status==='active'?' active':'');
+  document.getElementById('aiStatusText').textContent=statusText;
+  if(lines){
+    const term=document.getElementById('aiTerminal');
+    term.innerHTML='';
+    lines.forEach((l,i)=>setTimeout(()=>{
+      const d=document.createElement('div');
+      d.className='mqtt-line';
+      d.style.color=l.cls==='t-g'?'#2ecc71':l.cls==='t-y'?'#ffd860':'rgba(255,255,255,0.7)';
+      d.textContent=l.text; term.appendChild(d);
+    },i*400));
+  }
+}
+
+function updateConsiders(v1,v2,v3,v4,v5,v6){
+  ['c1','c2','c3','c4','c5','c6'].forEach((id,i)=>document.getElementById(id).textContent=[v1,v2,v3,v4,v5,v6][i]);
+}
+
+function goToStep(i){updateStep(i);}
+function togglePlay(){
+  isPlaying=!isPlaying;
+  const btn=document.getElementById('playBtn');
+  if(isPlaying){
+    btn.textContent='⏸ Pause';
+    playInterval=setInterval(()=>{
+      if(currentStep<steps.length-1) updateStep(currentStep+1);
+      else{clearInterval(playInterval);isPlaying=false;btn.textContent='▶ Play Demo';}
+    },2800);
+  } else {clearInterval(playInterval);btn.textContent='▶ Play Demo';}
+}
+function resetDemo(){
+  clearInterval(playInterval);isPlaying=false;
+  document.getElementById('playBtn').textContent='▶ Play Demo';
+  updateStep(0);resetVisuals();
+}
+updateStep(0);
+</script>
+</body>
+</html>

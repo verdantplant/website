@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABG0lEQVR4nGNkQANcQhz/0cWoDb69+8EIYzPR23J0e5iwCdLTEYwDYTkyYBpIyxkY0NLAqAMGArDgk1TZlYkhdsdtOl4DSdWDMwRk50TgtYgUgM8svFHw89F7ii0nZAbBNPDz0Xu4IYSCH1kNsj58AGcaeJyygoGBAXucEgPY5QRRHIQLMBJTEOFyBMxwQvL4wIBnQ6IcQIxPyNVDlAPISQfE6iE7CpB9SE4IUewAagGyHYAcxORmVQYGAnUBDKAHMSXZjiwH4AKU+BwGyIoCbD4lNyFSnAjfrLtJkX6iimJcQCDDCc7+MGMfWWZQFAIwS8m1nIGBwhCgBhi6BRHVHIDcURwQBzAwoPZW6Qm+vfvByITMobflDAwMDAD8UGO2RUdmNwAAAABJRU5ErkJggg==">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Docs — Verdant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#1a7a4a;--green-light:#2ecc71;--green-pale:#e8f5ee;--dark:#0a1208;--dark2:#111d15;--dark3:#1a2d1e;--gray:#6b7d72;--white:#ffffff;--border:#d4e2d9;--sol:#9945FF;--font-head:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Courier New',monospace;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-body);color:var(--white);background:var(--dark);}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px;background:rgba(10,18,8,0.98);border-bottom:1px solid rgba(255,255,255,0.07);position:sticky;top:0;z-index:50;}
+  .nav-back{display:flex;align-items:center;gap:6px;text-decoration:none;color:rgba(255,255,255,0.35);font-size:14px;transition:color 0.2s;}
+  .nav-back:hover{color:var(--green-light);}
+  .logo-mark{width:26px;height:26px;background:var(--dark3);border-radius:7px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.08);}
+  .nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+  .nav-logo span{font-family:var(--font-head);font-size:15px;font-weight:800;color:var(--white);}
+  .token-pill{font-size:11px;font-weight:700;color:var(--sol);background:rgba(153,69,255,0.12);border:1px solid rgba(153,69,255,0.25);padding:4px 10px;border-radius:100px;}
+
+  .page{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px);}
+  aside{border-right:1px solid rgba(255,255,255,0.06);padding:2rem 1rem;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;background:var(--dark2);}
+  .sidebar-group{margin-bottom:1.5rem;}
+  .sidebar-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-bottom:0.5rem;padding:0 8px;}
+  .sidebar-link{display:block;padding:6px 10px;border-radius:6px;font-size:13px;text-decoration:none;color:rgba(255,255,255,0.35);transition:all 0.15s;}
+  .sidebar-link:hover{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.7);}
+  .sidebar-link.active{background:rgba(46,204,113,0.1);color:var(--green-light);}
+
+  main{padding:3rem 4rem;}
+  .content-max{max-width:740px;}
+  h1{font-family:var(--font-head);font-size:2rem;font-weight:800;margin-bottom:0.5rem;color:var(--white);letter-spacing:-0.02em;}
+  .subtitle{font-size:15px;color:rgba(255,255,255,0.35);margin-bottom:2.5rem;font-weight:300;line-height:1.65;}
+  h2{font-family:var(--font-head);font-size:1.15rem;font-weight:800;margin-top:3rem;margin-bottom:1rem;color:var(--white);padding-top:1rem;border-top:1px solid rgba(255,255,255,0.07);scroll-margin-top:72px;}
+  h3{font-family:var(--font-head);font-size:0.9rem;font-weight:700;margin-top:1.5rem;margin-bottom:0.5rem;color:rgba(255,255,255,0.7);}
+  p{font-size:14px;line-height:1.75;color:rgba(255,255,255,0.4);margin-bottom:1rem;font-weight:300;}
+  code{font-family:var(--font-mono);font-size:12px;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;color:var(--green-light);}
+
+  .info-box{background:rgba(100,150,255,0.08);border:1px solid rgba(100,150,255,0.2);border-radius:8px;padding:12px 16px;margin:1rem 0;font-size:13px;color:rgba(150,180,255,0.8);}
+  .warn-box{background:rgba(255,150,0,0.08);border:1px solid rgba(255,150,0,0.2);border-radius:8px;padding:12px 16px;margin:1rem 0;font-size:13px;color:rgba(255,180,80,0.8);}
+  .sol-box{background:rgba(153,69,255,0.08);border:1px solid rgba(153,69,255,0.2);border-radius:8px;padding:12px 16px;margin:1rem 0;font-size:13px;color:rgba(192,132,252,0.8);}
+
+  .endpoint{border:1px solid rgba(255,255,255,0.07);border-radius:12px;overflow:hidden;margin-bottom:1.25rem;background:var(--dark2);}
+  .endpoint-header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);}
+  .method-badge{font-size:11px;font-weight:800;font-family:var(--font-mono);padding:3px 10px;border-radius:6px;}
+  .method-get{background:rgba(100,150,255,0.15);color:#90b4ff;}
+  .method-post{background:rgba(46,204,113,0.15);color:#2ecc71;}
+  .method-put{background:rgba(255,150,0,0.15);color:#ffb060;}
+  .method-delete{background:rgba(255,80,80,0.15);color:#ff9090;}
+  .endpoint-path{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--white);}
+  .endpoint-desc{font-size:12px;color:rgba(255,255,255,0.25);margin-left:auto;}
+  .endpoint-body{padding:14px;}
+
+  .param-table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;}
+  .param-table th{text-align:left;padding:7px 10px;background:rgba(255,255,255,0.03);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:rgba(255,255,255,0.25);}
+  .param-table td{padding:7px 10px;border-top:1px solid rgba(255,255,255,0.05);vertical-align:top;color:rgba(255,255,255,0.5);}
+  .param-table td:first-child{font-family:var(--font-mono);font-size:11px;color:var(--green-light);}
+  .param-table td:nth-child(2){color:#90b4ff;font-size:11px;font-family:var(--font-mono);}
+  .required-badge{font-size:9px;background:rgba(255,80,80,0.15);color:#ff9090;padding:1px 5px;border-radius:4px;font-weight:700;margin-left:4px;}
+  .optional-badge{font-size:9px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.3);padding:1px 5px;border-radius:4px;font-weight:700;margin-left:4px;}
+
+  .code-block{background:#060e08;border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;margin:10px 0;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,0.05);}
+  .code-lang{font-size:10px;color:rgba(255,255,255,0.2);font-family:var(--font-mono);}
+  .code-copy{font-size:10px;color:var(--green-light);background:none;border:1px solid rgba(46,204,113,0.2);padding:2px 7px;border-radius:4px;cursor:pointer;font-family:var(--font-body);}
+  .code-pre{padding:12px;overflow-x:auto;}
+  .code-pre pre{font-family:var(--font-mono);font-size:11px;line-height:1.65;color:rgba(255,255,255,0.5);}
+  .ck{color:#2ecc71;} .cv{color:#90b4ff;} .cs{color:#ffd860;} .cm{color:rgba(255,255,255,0.2);}
+
+  .response-block{background:#060e08;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;margin:8px 0;font-family:var(--font-mono);font-size:11px;line-height:1.75;color:rgba(255,255,255,0.5);}
+  .rk{color:#2ecc71;} .rv{color:#90b4ff;} .rs{color:#ffd860;}
+
+  .rate-table{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.07);border-radius:10px;overflow:hidden;margin:1rem 0;}
+  .rate-cell{background:var(--dark2);padding:9px 12px;font-size:12px;color:rgba(255,255,255,0.5);}
+  .rate-cell.header{background:rgba(255,255,255,0.04);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:rgba(255,255,255,0.25);}
+
+  .webhook-event{border:1px solid rgba(255,255,255,0.07);border-radius:10px;margin-bottom:10px;overflow:hidden;background:var(--dark2);}
+  .webhook-event-header{padding:10px 14px;background:rgba(255,255,255,0.03);display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .event-name{font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--green-light);}
+  .event-desc{font-size:12px;color:rgba(255,255,255,0.3);}
+  .webhook-event-body{padding:10px 14px;}
+
+  .treasury-card{background:rgba(153,69,255,0.06);border:1px solid rgba(153,69,255,0.15);border-radius:12px;padding:1.25rem;margin:1rem 0;}
+  .treasury-card h4{font-size:13px;font-weight:700;color:#c084fc;margin-bottom:8px;}
+  .treasury-card p{font-size:13px;color:rgba(192,132,252,0.6);margin:0;line-height:1.6;}
+
+  @media(max-width:768px){.page{grid-template-columns:1fr;}aside{display:none;}main{padding:2rem 1.5rem;}.rate-table{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">← Home</a>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-mark" style="background:none;border:none;"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAB4klEQVR4nO2asU7DMBCG/0RIRUyUvZ14EgaeoQ+QAZ4Ihj5AJh6AgfdAYmpW1DJV7QSTkXEcx47vLtjJN1VOcuc///lsVSngwdXN5bfPfWNw3J8K13Xnxf8szKRLqHUwJWEmptDSvCFlcUB7/qXrYqroOkrbYA4oPa0SzY0CyM89newdLHN2D5iCg2NPgJvsBV4Meej29dE6ft4d0FR11IRW2w0W66X12sf9U3A8Uge7JiYdQ6cI6aKr7cZrEkPeNNBdGYrz7gAAQVUyyEGVSJKhOb0FKvf6Eg51z/Wsmcuci4tBTcaWOLa5KJTIEBEuSJoMdWOgjOktsKnqPy41VY3FeskiTqHim3lDqiWoi9rQO1/M+uOKmf1JJtpBoP3Gzf2sywXbfdQVQe6gbbOOGYuFRCDV2uOImf0aJBHIUVpUMUUctJUbR1nbiBbI4R5lbHYHXU5JuDg3mdRhEaiXnmsdcZxjTUiOal0oAX1HNc61KFKiUscyG6wCfZzh7qRiTUZ3TMo9YAL7YNSfTqFIOqeYz6LUfL68i+Zj3QdNrh/ufn9/Pb+J5BR1UImSEgcIOzgG82E7dfIX2Pe9Zerk7yDQ/9Vsqhz3p2IaDgL5uaj0lLbB1NF1tEo0dZHm/LP/6v4H43i+6qmFxcUAAAAASUVORK5CYII=" style="width:32px;height:32px;" alt="Verdant"></div>
+    <span>Verdant</span>
+  </a>
+  <span class="token-pill">$VRDT on Solana</span>
+</nav>
+
+<div class="page">
+  <aside>
+    <div class="sidebar-group">
+      <div class="sidebar-label">Introduction</div>
+      <a href="#intro" class="sidebar-link active">Overview</a>
+      <a href="#auth" class="sidebar-link">Authentication</a>
+      <a href="#rate-limits" class="sidebar-link">Rate Limits</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-label">Plants</div>
+      <a href="#plants" class="sidebar-link">Plants API</a>
+      <a href="#sensors" class="sidebar-link">Sensor Data</a>
+      <a href="#actions" class="sidebar-link">Actions</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-label">AI & Analytics</div>
+      <a href="#ai-analysis" class="sidebar-link">AI Analysis</a>
+      <a href="#care-logs" class="sidebar-link">Care Logs</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-label">Token & Chain</div>
+      <a href="#treasury" class="sidebar-link">Treasury API</a>
+      <a href="#webhooks" class="sidebar-link">Webhooks</a>
+      <a href="#mqtt-api" class="sidebar-link">MQTT Reference</a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="content-max">
+
+    <h1 id="intro">API Documentation</h1>
+    <p class="subtitle">Verdant's REST API gives you full programmatic access to plant data, sensor history, AI logs, and actuator control. All treasury data is publicly verifiable on Solana.</p>
+
+    <div class="info-box">🌐 <strong>Base URL:</strong> <code>https://api.verdant.io/v1</code> — All endpoints use HTTPS and return JSON.</div>
+    <div class="sol-box">⬡ <strong>On-chain:</strong> Sensor logs and treasury transactions are recorded on Solana. Verify anytime on <code>solana.fm</code> or <code>explorer.solana.com</code>.</div>
+
+    <h2 id="auth">🔑 Authentication</h2>
+    <p>All API requests require an API key sent via the Authorization header.</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">HTTP Header</span></div>
+      <div class="code-pre"><pre>Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json</pre></div>
+    </div>
+    <p>Get your API key from <strong style="color:rgba(255,255,255,0.7)">Settings → API Keys</strong> in your Verdant dashboard.</p>
+
+    <h2 id="rate-limits">⚡ Rate Limits</h2>
+    <div class="rate-table">
+      <div class="rate-cell header">Tier</div><div class="rate-cell header">Req / min</div><div class="rate-cell header">Req / day</div>
+      <div class="rate-cell">Free</div><div class="rate-cell">60</div><div class="rate-cell">10,000</div>
+      <div class="rate-cell">Starter</div><div class="rate-cell">300</div><div class="rate-cell">100,000</div>
+      <div class="rate-cell">Pro</div><div class="rate-cell">1,000</div><div class="rate-cell">Unlimited</div>
+    </div>
+
+    <h2 id="plants">🌱 Plants API</h2>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-get">GET</span><span class="endpoint-path">/plants</span><span class="endpoint-desc">List all plants</span></div>
+      <div class="endpoint-body">
+        <p>Returns all plants connected to your account.</p>
+        <div class="code-block"><div class="code-header"><span class="code-lang">Response 200</span></div><div class="code-pre"><pre>{
+  <span class="ck">"plants"</span>: [{
+    <span class="ck">"id"</span>: <span class="cs">"plant_abc123"</span>,
+    <span class="ck">"name"</span>: <span class="cs">"Cherry Tomato"</span>,
+    <span class="ck">"species"</span>: <span class="cs">"Solanum lycopersicum"</span>,
+    <span class="ck">"growth_stage"</span>: <span class="cs">"vegetative"</span>,
+    <span class="ck">"status"</span>: <span class="cs">"healthy"</span>,
+    <span class="ck">"onchain_log"</span>: <span class="cs">"https://solana.fm/address/..."</span>
+  }],
+  <span class="ck">"total"</span>: <span class="cv">1</span>
+}</pre></div></div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-post">POST</span><span class="endpoint-path">/plants</span><span class="endpoint-desc">Add a new plant</span></div>
+      <div class="endpoint-body">
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>name<span class="required-badge">required</span></td><td>string</td><td>Your plant's name</td></tr>
+          <tr><td>species<span class="optional-badge">optional</span></td><td>string</td><td>Scientific species name</td></tr>
+          <tr><td>growth_stage<span class="optional-badge">optional</span></td><td>string</td><td>seedling, vegetative, flowering, fruiting</td></tr>
+          <tr><td>care_preset<span class="optional-badge">optional</span></td><td>string</td><td>tropical, temperate, desert, mediterranean</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-get">GET</span><span class="endpoint-path">/plants/{id}</span><span class="endpoint-desc">Plant details</span></div>
+      <div class="endpoint-body"><p>Returns full plant details including MQTT config, care thresholds, and on-chain log address.</p></div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-delete">DELETE</span><span class="endpoint-path">/plants/{id}</span><span class="endpoint-desc">Delete plant</span></div>
+      <div class="endpoint-body"><div class="warn-box">⚠️ Permanent. Deletes all associated sensor data and care logs. On-chain records remain permanently.</div></div>
+    </div>
+
+    <h2 id="sensors">📊 Sensor Data</h2>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-get">GET</span><span class="endpoint-path">/plants/{id}/sensors</span><span class="endpoint-desc">Sensor history</span></div>
+      <div class="endpoint-body">
+        <table class="param-table">
+          <tr><th>Query Param</th><th>Type</th><th>Default</th></tr>
+          <tr><td>from</td><td>ISO 8601</td><td>24 hours ago</td></tr>
+          <tr><td>to</td><td>ISO 8601</td><td>Now</td></tr>
+          <tr><td>interval</td><td>string</td><td>raw — or: 5m, 15m, 1h, 1d</td></tr>
+          <tr><td>limit</td><td>integer</td><td>100 (max: 1000)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-post">POST</span><span class="endpoint-path">/plants/{id}/sensors</span><span class="endpoint-desc">Submit sensor data</span></div>
+      <div class="endpoint-body">
+        <p>HTTP alternative to MQTT — useful for testing or non-broker integrations.</p>
+        <div class="code-block"><div class="code-header"><span class="code-lang">Request Body</span></div><div class="code-pre"><pre>{
+  <span class="ck">"temperature"</span>: <span class="cv">22.5</span>,
+  <span class="ck">"humidity"</span>: <span class="cv">65</span>,
+  <span class="ck">"soilMoisture"</span>: <span class="cv">45</span>,
+  <span class="ck">"lightLevel"</span>: <span class="cv">3500</span>
+}</pre></div></div>
+      </div>
+    </div>
+
+    <h2 id="actions">🎮 Actions</h2>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-post">POST</span><span class="endpoint-path">/plants/{id}/actions</span><span class="endpoint-desc">Send hardware command</span></div>
+      <div class="endpoint-body">
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>action<span class="required-badge">required</span></td><td>string</td><td>water, light_on, light_off, fan_on, fan_off, heater_on, heater_off</td></tr>
+          <tr><td>duration<span class="optional-badge">optional</span></td><td>integer</td><td>Duration in seconds</td></tr>
+          <tr><td>level<span class="optional-badge">optional</span></td><td>integer</td><td>Intensity 0–100 for dimmers</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <h2 id="ai-analysis">🧠 AI Analysis</h2>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-post">POST</span><span class="endpoint-path">/plants/{id}/analyze</span><span class="endpoint-desc">Trigger manual AI analysis</span></div>
+      <div class="endpoint-body">
+        <p>Forces an immediate AI analysis using the latest sensor data, bypassing the automatic interval.</p>
+        <div class="code-block"><div class="code-header"><span class="code-lang">Response 200</span></div><div class="code-pre"><pre>{
+  <span class="ck">"analysis_id"</span>: <span class="cs">"anlz_xyz789"</span>,
+  <span class="ck">"actions_taken"</span>: [<span class="cs">"water"</span>, <span class="cs">"light_adjust"</span>],
+  <span class="ck">"reasoning"</span>: <span class="cs">"Soil moisture 28% below threshold 35%..."</span>,
+  <span class="ck">"onchain_tx"</span>: <span class="cs">"5XnJk...7fPq"</span>,
+  <span class="ck">"next_analysis"</span>: <span class="cs">"2025-03-18T14:00:00Z"</span>
+}</pre></div></div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-get">GET</span><span class="endpoint-path">/plants/{id}/analysis</span><span class="endpoint-desc">AI analysis history</span></div>
+      <div class="endpoint-body"><p>Returns historical AI decision logs including reasoning, actions taken, and on-chain transaction IDs for verification.</p></div>
+    </div>
+
+    <h2 id="care-logs">📋 Care Logs</h2>
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-get">GET</span><span class="endpoint-path">/plants/{id}/logs</span><span class="endpoint-desc">Full care timeline</span></div>
+      <div class="endpoint-body"><p>Complete timeline of all events: waterings, light adjustments, growth stage changes, and AI notifications — all with on-chain references.</p></div>
+    </div>
+
+    <h2 id="treasury">⬡ Treasury API</h2>
+    <div class="sol-box">All treasury data is publicly available on-chain. These endpoints are convenience wrappers around Solana data.</div>
+
+    <div class="treasury-card">
+      <h4>Treasury Wallet</h4>
+      <p>All $VRDT trading fees flow into a Squads Protocol multisig. Balance, inflows, and outflows are publicly verifiable. Use the endpoints below or query Solana directly.</p>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-get">GET</span><span class="endpoint-path">/treasury</span><span class="endpoint-desc">Treasury overview</span></div>
+      <div class="endpoint-body">
+        <div class="code-block"><div class="code-header"><span class="code-lang">Response 200</span></div><div class="code-pre"><pre>{
+  <span class="ck">"balance_usdc"</span>: <span class="cv">42850.00</span>,
+  <span class="ck">"balance_vrdt"</span>: <span class="cv">1200000</span>,
+  <span class="ck">"monthly_inflow"</span>: <span class="cv">8400.00</span>,
+  <span class="ck">"monthly_spend"</span>: {
+    <span class="ck">"ai_ops"</span>: <span class="cv">3360.00</span>,
+    <span class="ck">"rnd"</span>: <span class="cv">2520.00</span>,
+    <span class="ck">"marketing"</span>: <span class="cv">1680.00</span>,
+    <span class="ck">"reserve"</span>: <span class="cv">840.00</span>
+  },
+  <span class="ck">"wallet_address"</span>: <span class="cs">"VRDTxyz...abc"</span>,
+  <span class="ck">"solana_explorer"</span>: <span class="cs">"https://solana.fm/address/VRDTxyz..."</span>
+}</pre></div></div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header"><span class="method-badge method-get">GET</span><span class="endpoint-path">/treasury/transactions</span><span class="endpoint-desc">Transaction history</span></div>
+      <div class="endpoint-body"><p>Paginated list of all treasury inflows (trading fees) and outflows (ops spending) with Solana transaction signatures.</p></div>
+    </div>
+
+    <h2 id="webhooks">🔔 Webhooks</h2>
+    <p>Verdant sends real-time events to your endpoint URL whenever something happens in the network.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">POST /webhooks</span></div>
+      <div class="code-pre"><pre>{
+  <span class="ck">"url"</span>: <span class="cs">"https://yourapp.com/verdant-webhook"</span>,
+  <span class="ck">"events"</span>: [<span class="cs">"sensor.low_moisture"</span>, <span class="cs">"action.taken"</span>, <span class="cs">"ai.analysis_complete"</span>, <span class="cs">"treasury.inflow"</span>],
+  <span class="ck">"plant_id"</span>: <span class="cs">"plant_abc123"</span>
+}</pre></div>
+    </div>
+
+    <div class="webhook-event">
+      <div class="webhook-event-header"><span class="event-name">sensor.low_moisture</span><span class="event-desc">Soil dropped below threshold</span></div>
+      <div class="webhook-event-body"><div class="response-block"><span class="rk">"event"</span>: <span class="rs">"sensor.low_moisture"</span>, <span class="rk">"value"</span>: <span class="rv">18</span>, <span class="rk">"threshold"</span>: <span class="rv">35</span></div></div>
+    </div>
+    <div class="webhook-event">
+      <div class="webhook-event-header"><span class="event-name">action.taken</span><span class="event-desc">AI executed a care action</span></div>
+      <div class="webhook-event-body"><div class="response-block"><span class="rk">"event"</span>: <span class="rs">"action.taken"</span>, <span class="rk">"action"</span>: <span class="rs">"water"</span>, <span class="rk">"onchain_tx"</span>: <span class="rs">"5XnJ..."</span></div></div>
+    </div>
+    <div class="webhook-event">
+      <div class="webhook-event-header"><span class="event-name">treasury.inflow</span><span class="event-desc">Trading fee received</span></div>
+      <div class="webhook-event-body"><div class="response-block"><span class="rk">"event"</span>: <span class="rs">"treasury.inflow"</span>, <span class="rk">"amount_usdc"</span>: <span class="rv">142.50</span>, <span class="rk">"tx"</span>: <span class="rs">"9Kqm..."</span></div></div>
+    </div>
+
+    <h2 id="mqtt-api">📡 MQTT Reference</h2>
+    <p>Complete reference of all MQTT topics used by Verdant hardware nodes.</p>
+
+    <table class="param-table" style="margin-top:1rem;border:1px solid rgba(255,255,255,0.07);border-radius:8px;overflow:hidden">
+      <tr><th>Topic</th><th>Direction</th><th>Description</th></tr>
+      <tr><td>verdant/{id}/sensors</td><td style="color:#90b4ff">Publish ↑</td><td>Send sensor readings (JSON, every 30s)</td></tr>
+      <tr><td>verdant/{id}/actions</td><td style="color:#2ecc71">Subscribe ↓</td><td>Receive AI action commands</td></tr>
+      <tr><td>verdant/{id}/status</td><td style="color:#2ecc71">Subscribe ↓</td><td>Connection & health status updates</td></tr>
+      <tr><td>verdant/{id}/camera</td><td style="color:#90b4ff">Publish ↑</td><td>Camera frame stream (JPEG bytes)</td></tr>
+    </table>
+
+    </div>
+  </main>
+</div>
+
+<script>
+const links=document.querySelectorAll('.sidebar-link');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  document.querySelectorAll('[id]').forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id;});
+  links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>

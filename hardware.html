@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABG0lEQVR4nGNkQANcQhz/0cWoDb69+8EIYzPR23J0e5iwCdLTEYwDYTkyYBpIyxkY0NLAqAMGArDgk1TZlYkhdsdtOl4DSdWDMwRk50TgtYgUgM8svFHw89F7ii0nZAbBNPDz0Xu4IYSCH1kNsj58AGcaeJyygoGBAXucEgPY5QRRHIQLMBJTEOFyBMxwQvL4wIBnQ6IcQIxPyNVDlAPISQfE6iE7CpB9SE4IUewAagGyHYAcxORmVQYGAnUBDKAHMSXZjiwH4AKU+BwGyIoCbD4lNyFSnAjfrLtJkX6iimJcQCDDCc7+MGMfWWZQFAIwS8m1nIGBwhCgBhi6BRHVHIDcURwQBzAwoPZW6Qm+vfvByITMobflDAwMDAD8UGO2RUdmNwAAAABJRU5ErkJggg==">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hardware Guide — Verdant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#1a7a4a;--green-light:#2ecc71;--green-pale:#e8f5ee;--dark:#0a1208;--dark2:#111d15;--dark3:#1a2d1e;--gray:#6b7d72;--gray-light:#f0f4f1;--white:#ffffff;--border:#d4e2d9;--sol:#9945FF;--font-head:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Courier New',monospace;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-body);color:var(--white);background:var(--dark);}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px;background:rgba(10,18,8,0.98);border-bottom:1px solid rgba(255,255,255,0.07);position:sticky;top:0;z-index:50;}
+  .nav-back{display:flex;align-items:center;gap:6px;text-decoration:none;color:rgba(255,255,255,0.35);font-size:14px;transition:color 0.2s;}
+  .nav-back:hover{color:var(--green-light);}
+  .logo-mark{width:26px;height:26px;background:var(--dark3);border-radius:7px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.08);}
+  .nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+  .nav-logo span{font-family:var(--font-head);font-size:15px;font-weight:800;color:var(--white);}
+  .token-pill{font-size:11px;font-weight:700;color:var(--sol);background:rgba(153,69,255,0.12);border:1px solid rgba(153,69,255,0.25);padding:4px 10px;border-radius:100px;}
+
+  .page{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px);}
+  aside{border-right:1px solid rgba(255,255,255,0.06);padding:2rem 1rem;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;background:var(--dark2);}
+  .sidebar-group{margin-bottom:1.5rem;}
+  .sidebar-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-bottom:0.5rem;padding:0 8px;}
+  .sidebar-link{display:block;padding:6px 10px;border-radius:6px;font-size:13px;text-decoration:none;color:rgba(255,255,255,0.35);transition:all 0.15s;}
+  .sidebar-link:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.7);}
+  .sidebar-link.active{background:rgba(46,204,113,0.1);color:var(--green-light);}
+
+  main{padding:3rem 4rem;max-width:780px;}
+  h1{font-family:var(--font-head);font-size:2rem;font-weight:800;margin-bottom:0.5rem;color:var(--white);letter-spacing:-0.02em;}
+  .subtitle{font-size:15px;color:rgba(255,255,255,0.4);margin-bottom:2.5rem;font-weight:300;line-height:1.6;}
+  h2{font-family:var(--font-head);font-size:1.2rem;font-weight:800;margin-top:3rem;margin-bottom:1rem;color:var(--white);padding-top:1rem;border-top:1px solid rgba(255,255,255,0.07);letter-spacing:-0.01em;scroll-margin-top:72px;}
+  h2:first-of-type{border-top:none;}
+  h3{font-family:var(--font-head);font-size:0.95rem;font-weight:700;margin-top:1.5rem;margin-bottom:0.5rem;color:rgba(255,255,255,0.8);}
+  p{font-size:14px;line-height:1.75;color:rgba(255,255,255,0.45);margin-bottom:1rem;font-weight:300;}
+
+  .sensor-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:1.5rem 0;}
+  .sensor-card{border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:1rem;text-align:center;background:var(--dark2);}
+  .sensor-card .icon{font-size:20px;margin-bottom:6px;}
+  .sensor-card h4{font-size:12px;font-weight:700;margin-bottom:2px;color:var(--white);}
+  .sensor-card p{font-size:10px;color:rgba(255,255,255,0.3);margin:0;}
+
+  .topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0;}
+  .topic-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:1rem;}
+  .topic-card .t-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:6px;}
+  .topic-card code{font-family:var(--font-mono);font-size:12px;color:var(--green-light);font-weight:600;}
+  .topic-card p{font-size:12px;color:rgba(255,255,255,0.3);margin:4px 0 0;}
+
+  .code-block{background:#060e08;border:1px solid rgba(255,255,255,0.07);border-radius:12px;overflow:hidden;margin:1.5rem 0;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .code-title{font-size:11px;color:rgba(255,255,255,0.25);font-family:var(--font-mono);}
+  .code-copy{font-size:11px;color:var(--green-light);background:none;border:1px solid rgba(46,204,113,0.25);padding:3px 8px;border-radius:4px;cursor:pointer;font-family:var(--font-body);}
+  .code-body{padding:16px;overflow-x:auto;}
+  .code-body pre{font-family:var(--font-mono);font-size:12px;line-height:1.65;color:rgba(255,255,255,0.55);}
+  .c-green{color:#2ecc71;} .c-yellow{color:#ffd860;} .c-blue{color:#90b4ff;} .c-comment{color:rgba(255,255,255,0.2);}
+
+  .tab-bar{display:flex;gap:0;border:1px solid rgba(255,255,255,0.08);border-radius:8px;overflow:hidden;width:fit-content;margin-bottom:0;}
+  .tab-btn{padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;background:rgba(255,255,255,0.03);border:none;font-family:var(--font-body);color:rgba(255,255,255,0.35);transition:all 0.15s;border-right:1px solid rgba(255,255,255,0.08);}
+  .tab-btn:last-child{border-right:none;}
+  .tab-btn.active{background:rgba(46,204,113,0.12);color:var(--green-light);}
+
+  .warning{background:rgba(255,180,0,0.08);border:1px solid rgba(255,180,0,0.2);border-radius:8px;padding:10px 14px;margin:1rem 0;font-size:13px;color:rgba(255,200,0,0.7);}
+
+  .json-block{background:#060e08;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:1rem;margin:1rem 0;font-family:var(--font-mono);font-size:12px;line-height:1.75;}
+  .jk{color:var(--green-light);} .jv{color:#90b4ff;} .jc{color:rgba(255,255,255,0.2);}
+
+  .req-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0;}
+  .req-card{border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:1rem;background:var(--dark2);}
+  .req-card h4{font-size:12px;font-weight:700;color:var(--green-light);margin-bottom:8px;}
+  .req-card ul{list-style:none;}
+  .req-card li{font-size:12px;color:rgba(255,255,255,0.4);padding:3px 0;display:flex;align-items:center;gap:6px;}
+  .req-card li::before{content:'·';color:var(--green-light);}
+
+  .settings-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0;}
+  .setting-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px 14px;}
+  .setting-label{font-size:10px;color:rgba(255,255,255,0.25);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.05em;}
+  .setting-val{font-size:14px;font-weight:600;color:var(--white);}
+
+  .trouble-item{border:1px solid rgba(255,255,255,0.07);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .trouble-q{padding:12px 16px;font-size:13px;font-weight:600;background:rgba(255,255,255,0.03);color:var(--white);}
+  .trouble-a{padding:12px 16px;font-size:12px;color:rgba(255,255,255,0.4);line-height:1.65;}
+  .trouble-a ul{list-style:none;padding-left:4px;}
+  .trouble-a li{padding:3px 0;display:flex;gap:6px;}
+  .trouble-a li::before{content:'→';color:var(--green-light);flex-shrink:0;}
+
+  .safety-list{list-style:none;}
+  .safety-list li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:rgba(255,255,255,0.5);}
+  .safety-list li:last-child{border-bottom:none;}
+  .safety-list li::before{content:'✓';color:var(--green-light);font-weight:700;flex-shrink:0;}
+
+  @media(max-width:768px){.page{grid-template-columns:1fr;}aside{display:none;}main{padding:2rem 1.5rem;}.sensor-grid{grid-template-columns:repeat(2,1fr);}.topic-grid,.req-grid,.settings-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">← Home</a>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-mark" style="background:none;border:none;"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAB4klEQVR4nO2asU7DMBCG/0RIRUyUvZ14EgaeoQ+QAZ4Ihj5AJh6AgfdAYmpW1DJV7QSTkXEcx47vLtjJN1VOcuc///lsVSngwdXN5bfPfWNw3J8K13Xnxf8szKRLqHUwJWEmptDSvCFlcUB7/qXrYqroOkrbYA4oPa0SzY0CyM89newdLHN2D5iCg2NPgJvsBV4Meej29dE6ft4d0FR11IRW2w0W66X12sf9U3A8Uge7JiYdQ6cI6aKr7cZrEkPeNNBdGYrz7gAAQVUyyEGVSJKhOb0FKvf6Eg51z/Wsmcuci4tBTcaWOLa5KJTIEBEuSJoMdWOgjOktsKnqPy41VY3FeskiTqHim3lDqiWoi9rQO1/M+uOKmf1JJtpBoP3Gzf2sywXbfdQVQe6gbbOOGYuFRCDV2uOImf0aJBHIUVpUMUUctJUbR1nbiBbI4R5lbHYHXU5JuDg3mdRhEaiXnmsdcZxjTUiOal0oAX1HNc61KFKiUscyG6wCfZzh7qRiTUZ3TMo9YAL7YNSfTqFIOqeYz6LUfL68i+Zj3QdNrh/ufn9/Pb+J5BR1UImSEgcIOzgG82E7dfIX2Pe9Zerk7yDQ/9Vsqhz3p2IaDgL5uaj0lLbB1NF1tEo0dZHm/LP/6v4H43i+6qmFxcUAAAAASUVORK5CYII=" style="width:32px;height:32px;" alt="Verdant"></div>
+    <span>Verdant</span>
+  </a>
+  <span class="token-pill">$VRDT on Solana</span>
+</nav>
+
+<div class="page">
+  <aside>
+    <div class="sidebar-group">
+      <div class="sidebar-label">Getting Started</div>
+      <a href="#getting-started" class="sidebar-link active">Overview</a>
+      <a href="#mqtt" class="sidebar-link">MQTT Protocol</a>
+      <a href="#firmware" class="sidebar-link">Firmware Examples</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-label">Features</div>
+      <a href="#camera" class="sidebar-link">Camera Streaming</a>
+      <a href="#sensor-req" class="sidebar-link">Sensor Requirements</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-label">Reference</div>
+      <a href="#troubleshoot" class="sidebar-link">Troubleshooting</a>
+      <a href="#safety" class="sidebar-link">Safety & Best Practices</a>
+    </div>
+  </aside>
+
+  <main>
+    <h1 id="getting-started">🌱 Hardware Guide</h1>
+    <p class="subtitle">Connect your IoT sensors to Verdant via MQTT. We support any hardware that can publish JSON messages over WiFi.</p>
+
+    <div class="sensor-grid">
+      <div class="sensor-card"><div class="icon">🌡️</div><h4>Temperature</h4><p>DHT22, DS18B20, BME280</p></div>
+      <div class="sensor-card"><div class="icon">💧</div><h4>Humidity & Soil</h4><p>SHT31, Capacitive sensors</p></div>
+      <div class="sensor-card"><div class="icon">☀️</div><h4>Light</h4><p>BH1750, TSL2561, LDR</p></div>
+      <div class="sensor-card"><div class="icon">🫧</div><h4>CO₂</h4><p>MH-Z19, SCD30, SCD40</p></div>
+    </div>
+
+    <h2 id="mqtt">🔌 MQTT Protocol</h2>
+    <p>Your hardware communicates with Verdant using these MQTT topics. All sensor data is logged on Solana for full auditability.</p>
+
+    <div class="topic-grid">
+      <div class="topic-card">
+        <div class="t-label">Publish</div>
+        <code>verdant/{plant_id}/sensors</code>
+        <p>Send sensor readings as JSON every 30 seconds</p>
+      </div>
+      <div class="topic-card">
+        <div class="t-label">Subscribe</div>
+        <code>verdant/{plant_id}/actions</code>
+        <p>Receive AI action commands from Verdant</p>
+      </div>
+    </div>
+
+    <h3>Sensor Data Format</h3>
+    <div class="json-block">
+      <span class="jk">{</span><br>
+      &nbsp;&nbsp;<span class="jk">"temperature"</span>: <span class="jv">22.5</span>, &nbsp;<span class="jc">// Celsius</span><br>
+      &nbsp;&nbsp;<span class="jk">"humidity"</span>: <span class="jv">65</span>, &nbsp;<span class="jc">// Percentage</span><br>
+      &nbsp;&nbsp;<span class="jk">"soilMoisture"</span>: <span class="jv">45</span>, &nbsp;<span class="jc">// Percentage</span><br>
+      &nbsp;&nbsp;<span class="jk">"lightLevel"</span>: <span class="jv">3500</span>, &nbsp;<span class="jc">// Lux</span><br>
+      &nbsp;&nbsp;<span class="jk">"co2"</span>: <span class="jv">800</span> &nbsp;<span class="jc">// PPM (optional)</span><br>
+      <span class="jk">}</span>
+    </div>
+
+    <h3>Action Command Format</h3>
+    <div class="json-block">
+      <span class="jk">{</span><br>
+      &nbsp;&nbsp;<span class="jk">"action"</span>: <span class="jv">"water"</span>, &nbsp;<span class="jc">// water, light_on, light_off, fan_on, fan_off, heater_on, heater_off</span><br>
+      &nbsp;&nbsp;<span class="jk">"duration"</span>: <span class="jv">3</span> &nbsp;<span class="jc">// Optional: seconds</span><br>
+      <span class="jk">}</span>
+    </div>
+
+    <h2 id="firmware">⚙️ Firmware Examples</h2>
+    <p>Copy-paste ready code for your hardware platform. Open-source and MIT licensed.</p>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('pi')">🫐 Raspberry Pi</button>
+      <button class="tab-btn" onclick="switchTab('esp')">⚡ ESP32 / Arduino</button>
+    </div>
+
+    <div class="warning">⚠️ Replace YOUR_PLANT_ID and credentials with your actual Verdant credentials before deploying to hardware.</div>
+
+    <div id="tab-pi">
+      <div class="code-block">
+        <div class="code-header"><span class="code-title">verdant_pi_sensor.py</span><button class="code-copy" onclick="copyCode('pi-code')">Copy</button></div>
+        <div class="code-body"><pre id="pi-code"><span class="c-comment">#!/usr/bin/env python3
+# Verdant Raspberry Pi Sensor Client
+# Reads sensors and publishes to MQTT, receives action commands</span>
+
+<span class="c-blue">import</span> json, time
+<span class="c-blue">import</span> paho.mqtt.client <span class="c-blue">as</span> mqtt
+
+<span class="c-comment"># ============ CONFIGURATION ============</span>
+MQTT_BROKER = <span class="c-yellow">"test.mosquitto.org"</span>
+MQTT_PORT = <span class="c-green">1883</span>
+PLANT_ID = <span class="c-yellow">"YOUR_PLANT_ID"</span>
+TOPIC_SENSORS = <span class="c-yellow">f"verdant/{PLANT_ID}/sensors"</span>
+TOPIC_ACTIONS = <span class="c-yellow">f"verdant/{PLANT_ID}/actions"</span>
+
+<span class="c-comment"># ============ GPIO PINS ============</span>
+PUMP_PIN = <span class="c-green">17</span>
+LIGHT_PIN = <span class="c-green">27</span>
+FAN_PIN = <span class="c-green">22</span>
+
+<span class="c-blue">def</span> <span class="c-green">read_sensors</span>():
+    <span class="c-comment"># Replace with real sensor reads (DHT22, etc.)</span>
+    <span class="c-blue">return</span> {
+        <span class="c-yellow">"temperature"</span>: <span class="c-green">22.5</span>,
+        <span class="c-yellow">"humidity"</span>: <span class="c-green">65</span>,
+        <span class="c-yellow">"soilMoisture"</span>: <span class="c-green">45</span>,
+        <span class="c-yellow">"lightLevel"</span>: <span class="c-green">3500</span>
+    }
+
+<span class="c-blue">def</span> <span class="c-green">on_message</span>(client, userdata, msg):
+    cmd = json.loads(msg.payload)
+    <span class="c-blue">if</span> cmd[<span class="c-yellow">"action"</span>] == <span class="c-yellow">"water"</span>:
+        activate_pump(cmd.get(<span class="c-yellow">"duration"</span>, <span class="c-green">3</span>))
+
+<span class="c-comment"># Main loop — publishes every 30 seconds</span>
+<span class="c-blue">while True</span>:
+    client.publish(TOPIC_SENSORS, json.dumps(read_sensors()))
+    time.sleep(<span class="c-green">30</span>)</pre></div>
+      </div>
+    </div>
+
+    <div id="tab-esp" style="display:none">
+      <div class="code-block">
+        <div class="code-header"><span class="code-title">verdant_esp32.ino</span><button class="code-copy" onclick="copyCode('esp-code')">Copy</button></div>
+        <div class="code-body"><pre id="esp-code"><span class="c-comment">// Verdant ESP32 Sensor Client</span>
+<span class="c-blue">#include</span> <span class="c-yellow">&lt;WiFi.h&gt;</span>
+<span class="c-blue">#include</span> <span class="c-yellow">&lt;PubSubClient.h&gt;</span>
+<span class="c-blue">#include</span> <span class="c-yellow">&lt;ArduinoJson.h&gt;</span>
+
+<span class="c-blue">const char</span>* ssid = <span class="c-yellow">"YOUR_WIFI_SSID"</span>;
+<span class="c-blue">const char</span>* password = <span class="c-yellow">"YOUR_WIFI_PASS"</span>;
+<span class="c-blue">const char</span>* mqtt_server = <span class="c-yellow">"test.mosquitto.org"</span>;
+<span class="c-blue">const char</span>* plant_id = <span class="c-yellow">"YOUR_PLANT_ID"</span>;
+
+<span class="c-blue">const int</span> SOIL_PIN = <span class="c-green">34</span>;
+<span class="c-blue">const int</span> DHT_PIN = <span class="c-green">4</span>;
+<span class="c-blue">const int</span> PUMP_PIN = <span class="c-green">26</span>;
+
+<span class="c-blue">void</span> <span class="c-green">publishSensors</span>() {
+    StaticJsonDocument&lt;<span class="c-green">200</span>&gt; doc;
+    doc[<span class="c-yellow">"temperature"</span>] = readTemperature();
+    doc[<span class="c-yellow">"humidity"</span>] = readHumidity();
+    doc[<span class="c-yellow">"soilMoisture"</span>] = map(analogRead(SOIL_PIN),<span class="c-green">0</span>,<span class="c-green">4095</span>,<span class="c-green">100</span>,<span class="c-green">0</span>);
+    String out; serializeJson(doc, out);
+    client.publish(topic_sensors, out.c_str());
+}
+
+<span class="c-blue">void</span> <span class="c-green">loop</span>() {
+    publishSensors();
+    delay(<span class="c-green">30000</span>);
+}</pre></div>
+      </div>
+    </div>
+
+    <h2 id="camera">📹 Live Camera Streaming</h2>
+    <p>Stream video from a Raspberry Pi Camera or ESP32-CAM directly into your Verdant dashboard.</p>
+    <div class="settings-row">
+      <div class="setting-item"><div class="setting-label">Recommended resolution</div><div class="setting-val">640×480</div></div>
+      <div class="setting-item"><div class="setting-label">Frame rate</div><div class="setting-val">5–10 FPS</div></div>
+      <div class="setting-item"><div class="setting-label">Bandwidth</div><div class="setting-val">~1–2 Mbps</div></div>
+      <div class="setting-item"><div class="setting-label">Format</div><div class="setting-val">JPEG</div></div>
+    </div>
+
+    <h2 id="sensor-req">📊 Sensor Requirements</h2>
+    <div class="req-grid">
+      <div class="req-card">
+        <h4>Required (at least one)</h4>
+        <ul><li>soilMoisture: 0–100% (for watering decisions)</li></ul>
+      </div>
+      <div class="req-card">
+        <h4>Optional (improves AI accuracy)</h4>
+        <ul><li>temperature: Celsius</li><li>humidity: 0–100%</li><li>lightLevel: lux value</li><li>co2: PPM value</li></ul>
+      </div>
+    </div>
+
+    <h2 id="troubleshoot">🔧 Troubleshooting</h2>
+    <div class="trouble-item"><div class="trouble-q">Data not showing in dashboard?</div><div class="trouble-a"><ul><li>Check Plant ID matches exactly (case-sensitive)</li><li>Verify topic format: verdant/YOUR_PLANT_ID/sensors</li><li>Ensure JSON is valid before publishing</li><li>Wait at least 30 seconds (rate limiting applies)</li></ul></div></div>
+    <div class="trouble-item"><div class="trouble-q">MQTT connection failing?</div><div class="trouble-a"><ul><li>test.mosquitto.org is a public broker — no auth needed</li><li>Use port 8883 for TLS connections</li><li>Check firewall isn't blocking outbound MQTT traffic</li></ul></div></div>
+    <div class="trouble-item"><div class="trouble-q">Actions not reaching hardware?</div><div class="trouble-a"><ul><li>Subscribe to verdant/YOUR_PLANT_ID/actions</li><li>Action format: {"action": "water"}</li><li>Keep MQTT client loop running continuously</li></ul></div></div>
+    <div class="trouble-item"><div class="trouble-q">Testing without hardware?</div><div class="trouble-a"><ul><li>Use the "Sensor Test Data" button on the plant page</li><li>Or use MQTT Explorer to manually publish sensor data</li></ul></div></div>
+
+    <h2 id="safety">🛡️ Safety & Best Practices</h2>
+    <ul class="safety-list">
+      <li>Use relay modules for high-wattage pumps and grow lights</li>
+      <li>Add a physical emergency stop switch for safety</li>
+      <li>Test with "mock mode" before connecting real actuators</li>
+      <li>Keep electronics away from water sources</li>
+      <li>Use waterproof enclosures for outdoor setups</li>
+    </ul>
+  </main>
+</div>
+
+<script>
+function switchTab(tab){
+  document.getElementById('tab-pi').style.display=tab==='pi'?'block':'none';
+  document.getElementById('tab-esp').style.display=tab==='esp'?'block':'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.className='tab-btn'+((i===0&&tab==='pi')||(i===1&&tab==='esp')?' active':''));
+}
+function copyCode(id){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',2000);});
+}
+const links=document.querySelectorAll('.sidebar-link');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  document.querySelectorAll('[id]').forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id;});
+  links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>
