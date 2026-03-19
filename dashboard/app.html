@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Verdant Plant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --green:#1a7a4a;--green-light:#2ecc71;--green-pale:#e8f5ee;
+    --dark:#0a1208;--dark2:#111d15;--dark3:#1a2d1e;
+    --gray:#6b7d72;--gray-light:#f0f4f1;--white:#ffffff;--border:#d4e2d9;
+    --font-head:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;
+    --font-mono:'Courier New',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-body);background:#0d1610;color:var(--white);min-height:100vh;display:flex;}
+
+  /* SIDEBAR */
+  .sidebar{width:220px;background:var(--dark2);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;bottom:0;left:0;z-index:10;}
+  .sidebar-logo{display:flex;align-items:center;gap:8px;padding:1.25rem 1.25rem 1rem;}
+  .logo-mark{width:32px;height:32px;background:var(--dark3);border-radius:8px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;}
+  .logo-name{font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--white);}
+  .sidebar-nav{flex:1;padding:0 0.75rem;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;transition:all 0.15s;color:rgba(255,255,255,0.4);font-size:13px;font-weight:500;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:var(--font-body);}
+  .nav-item:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.8);}
+  .nav-item.active{background:rgba(46,204,113,0.12);color:var(--green-light);}
+  .nav-icon{font-size:15px;width:20px;text-align:center;}
+  .sidebar-bottom{padding:1rem;}
+  .user-pill{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);}
+  .user-avatar{width:28px;height:28px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--white);flex-shrink:0;}
+  .user-email{font-size:11px;color:rgba(255,255,255,0.4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+  .btn-logout{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.3);font-size:14px;transition:color 0.2s;}
+  .btn-logout:hover{color:#fc8181;}
+
+  /* MAIN */
+  .main{margin-left:220px;flex:1;padding:1.5rem;min-height:100vh;}
+
+  /* TOP BAR */
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+  .page-title{font-family:var(--font-head);font-size:1.5rem;font-weight:800;color:var(--white);}
+  .topbar-right{display:flex;align-items:center;gap:10px;}
+  .btn-add{background:var(--green-light);color:var(--dark);border:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;gap:6px;transition:all 0.2s;}
+  .btn-add:hover{background:#27d96b;}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:var(--green-light);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .status-label{font-size:12px;color:rgba(255,255,255,0.4);}
+
+  /* PLANT SELECTOR */
+  .plant-selector{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;}
+  .plant-chip{padding:7px 14px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);}
+  .plant-chip.active{background:rgba(46,204,113,0.15);border-color:rgba(46,204,113,0.4);color:var(--green-light);}
+  .plant-chip:hover{border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);}
+
+  /* STAT CARDS */
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+  .stat-card{background:var(--dark2);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:1.25rem;}
+  .stat-label{font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+  .stat-val{font-family:var(--font-head);font-size:1.75rem;font-weight:800;color:var(--white);margin-bottom:4px;}
+  .stat-sub{font-size:11px;color:rgba(255,255,255,0.3);}
+  .stat-icon{font-size:14px;}
+
+  /* GRID */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+  .grid-3{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem;}
+
+  /* CARDS */
+  .card{background:var(--dark2);border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;}
+  .card-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .card-title{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--white);}
+  .card-body{padding:1.25rem;}
+
+  /* CHART */
+  .chart-wrap{position:relative;height:180px;}
+
+  /* SENSOR READINGS */
+  .readings-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .reading-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 12px;}
+  .reading-label{font-size:10px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+  .reading-val{font-size:18px;font-weight:700;font-family:var(--font-head);}
+  .reading-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:6px;}
+  .reading-fill{height:3px;border-radius:2px;transition:width 1s ease;}
+
+  /* AI LOG */
+  .ai-log{display:flex;flex-direction:column;gap:0;}
+  .log-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:flex-start;gap:10px;}
+  .log-item:last-child{border-bottom:none;}
+  .log-status{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+  .status-healthy{background:var(--green-light);}
+  .status-warning{background:#ffd860;}
+  .status-critical{background:#fc8181;}
+  .log-content{flex:1;}
+  .log-reasoning{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;margin-bottom:4px;}
+  .log-meta{font-size:11px;color:rgba(255,255,255,0.25);}
+  .log-actions{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
+  .action-tag{font-size:10px;padding:1px 7px;border-radius:100px;background:rgba(46,204,113,0.12);color:var(--green-light);font-weight:600;}
+
+  /* CONTROLS */
+  .controls-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .control-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:1rem;cursor:pointer;transition:all 0.2s;text-align:center;font-family:var(--font-body);}
+  .control-btn:hover{border-color:rgba(46,204,113,0.4);background:rgba(46,204,113,0.08);}
+  .control-btn.active-ctrl{border-color:var(--green-light);background:rgba(46,204,113,0.15);}
+  .ctrl-icon{font-size:22px;margin-bottom:6px;}
+  .ctrl-name{font-size:12px;font-weight:600;color:var(--white);margin-bottom:2px;}
+  .ctrl-status{font-size:11px;color:rgba(255,255,255,0.3);}
+  .btn-trigger{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);padding:8px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;margin-top:6px;}
+  .btn-trigger:hover{background:rgba(46,204,113,0.15);border-color:rgba(46,204,113,0.4);color:var(--green-light);}
+
+  /* TREASURY */
+  .treasury-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+  .treasury-row:last-child{border-bottom:none;}
+  .treasury-label{font-size:12px;color:rgba(255,255,255,0.4);}
+  .treasury-val{font-size:13px;font-weight:600;color:var(--white);}
+  .treasury-val.green{color:var(--green-light);}
+  .fee-bars{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+  .fee-row{display:flex;align-items:center;gap:8px;font-size:11px;}
+  .fee-name{color:rgba(255,255,255,0.4);min-width:120px;}
+  .fee-bar-wrap{flex:1;height:4px;background:rgba(255,255,255,0.07);border-radius:2px;}
+  .fee-bar-fill{height:4px;border-radius:2px;background:var(--green-light);}
+  .fee-pct{color:var(--green-light);font-weight:700;min-width:28px;text-align:right;}
+
+  /* ADD PLANT MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:center;justify-content:center;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:var(--dark2);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:2rem;width:100%;max-width:440px;}
+  .modal h2{font-family:var(--font-head);font-size:1.2rem;font-weight:800;color:var(--white);margin-bottom:1.5rem;}
+  .modal .form-group{margin-bottom:1rem;}
+  .modal label{display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px;}
+  .modal input,.modal select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:10px 12px;font-size:13px;color:var(--white);font-family:var(--font-body);outline:none;transition:border-color 0.2s;}
+  .modal input:focus,.modal select:focus{border-color:var(--green-light);}
+  .modal select option{background:var(--dark2);color:var(--white);}
+  .modal-btns{display:flex;gap:8px;margin-top:1.5rem;}
+  .btn-cancel{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);padding:10px;border-radius:7px;cursor:pointer;font-family:var(--font-body);font-size:13px;}
+  .btn-save{flex:2;background:var(--green-light);color:var(--dark);border:none;padding:10px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-body);}
+
+  /* EMPTY STATE */
+  .empty-state{text-align:center;padding:3rem 1rem;}
+  .empty-state h3{font-family:var(--font-head);font-size:1.1rem;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:0.5rem;}
+  .empty-state p{font-size:13px;color:rgba(255,255,255,0.25);}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--dark2);border:1px solid rgba(46,204,113,0.3);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--white);z-index:999;transform:translateY(100px);opacity:0;transition:all 0.3s;}
+  .toast.show{transform:translateY(0);opacity:1;}
+
+  /* TABS */
+  .tab-bar{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:1rem;}
+  .tab-btn{padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;background:none;border:none;color:rgba(255,255,255,0.35);font-family:var(--font-body);border-bottom:2px solid transparent;transition:all 0.15s;margin-bottom:-1px;}
+  .tab-btn.active{color:var(--green-light);border-bottom-color:var(--green-light);}
+
+  @media(max-width:900px){
+    .sidebar{display:none;}
+    .main{margin-left:0;}
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .grid-2,.grid-3{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <svg width="18" height="18" viewBox="0 0 28 28" fill="none">
+        <line x1="14" y1="24" x2="7" y2="8" stroke="#2ecc71" stroke-width="3" stroke-linecap="round"/>
+        <line x1="14" y1="24" x2="21" y2="8" stroke="#2ecc71" stroke-width="3" stroke-linecap="round"/>
+        <ellipse cx="9" cy="14" rx="7" ry="4" fill="#2ecc71" transform="rotate(-40 9 14)"/>
+        <ellipse cx="19" cy="14" rx="7" ry="4" fill="#2ecc71" transform="rotate(40 19 14)"/>
+        <ellipse cx="7" cy="8" rx="5" ry="3" fill="#27ae60" transform="rotate(-30 7 8)"/>
+        <ellipse cx="21" cy="8" rx="5" ry="3" fill="#27ae60" transform="rotate(30 21 8)"/>
+      </svg>
+    </div>
+    <span class="logo-name">Verdant</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="nav-item active" onclick="switchPage('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </button>
+    <button class="nav-item" onclick="switchPage('plants')">
+      <span class="nav-icon">🌱</span> My Plants
+    </button>
+    <button class="nav-item" onclick="switchPage('ai-log')">
+      <span class="nav-icon">🧠</span> AI Log
+    </button>
+    <button class="nav-item" onclick="switchPage('controls')">
+      <span class="nav-icon">🎮</span> Controls
+    </button>
+    <button class="nav-item" onclick="switchPage('treasury')">
+      <span class="nav-icon">⬡</span> Treasury
+    </button>
+    <button class="nav-item" onclick="window.open('https://verdantplant.xyz','_blank')">
+      <span class="nav-icon">🌐</span> Website
+    </button>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="user-pill">
+      <div class="user-avatar" id="userInitial">V</div>
+      <span class="user-email" id="userEmail">loading...</span>
+      <button class="btn-logout" onclick="logout()" title="Logout">↩</button>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- DASHBOARD PAGE -->
+  <div id="page-dashboard">
+    <div class="topbar">
+      <div>
+        <div class="page-title">Dashboard</div>
+      </div>
+      <div class="topbar-right">
+        <div class="status-dot"></div>
+        <span class="status-label" id="liveStatus">Connecting...</span>
+        <button class="btn-add" onclick="showAddPlant()">+ Add Plant</button>
+      </div>
+    </div>
+
+    <!-- Plant selector -->
+    <div class="plant-selector" id="plantSelector">
+      <div class="plant-chip" style="opacity:0.4">Loading plants...</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-icon">🌡️</span> Temperature</div>
+        <div class="stat-val" id="statTemp">--</div>
+        <div class="stat-sub">Celsius</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-icon">💧</span> Humidity</div>
+        <div class="stat-val" id="statHum">--</div>
+        <div class="stat-sub">Percentage</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-icon">🌱</span> Soil Moisture</div>
+        <div class="stat-val" id="statSoil">--</div>
+        <div class="stat-sub">Percentage</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-icon">☀️</span> Light Level</div>
+        <div class="stat-val" id="statLight">--</div>
+        <div class="stat-sub">Lux</div>
+      </div>
+    </div>
+
+    <!-- Chart + AI Status -->
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Sensor History</span>
+          <div class="tab-bar" style="border:none;margin:0;">
+            <button class="tab-btn active" onclick="switchChart('soil',this)">Soil</button>
+            <button class="tab-btn" onclick="switchChart('temp',this)">Temp</button>
+            <button class="tab-btn" onclick="switchChart('hum',this)">Humidity</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="chart-wrap"><canvas id="sensorChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">Live Readings</span></div>
+        <div class="card-body">
+          <div class="readings-grid">
+            <div class="reading-item">
+              <div class="reading-label">Temperature</div>
+              <div class="reading-val" id="rTemp" style="color:#ff9060">--°C</div>
+              <div class="reading-bar"><div class="reading-fill" id="rTempBar" style="width:0%;background:#ff9060"></div></div>
+            </div>
+            <div class="reading-item">
+              <div class="reading-label">Humidity</div>
+              <div class="reading-val" id="rHum" style="color:#90b4ff">--%</div>
+              <div class="reading-bar"><div class="reading-fill" id="rHumBar" style="width:0%;background:#90b4ff"></div></div>
+            </div>
+            <div class="reading-item">
+              <div class="reading-label">Soil Moisture</div>
+              <div class="reading-val" id="rSoil" style="color:#2ecc71">--%</div>
+              <div class="reading-bar"><div class="reading-fill" id="rSoilBar" style="width:0%;background:#2ecc71"></div></div>
+            </div>
+            <div class="reading-item">
+              <div class="reading-label">Light</div>
+              <div class="reading-val" id="rLight" style="color:#ffd860">-- lx</div>
+              <div class="reading-bar"><div class="reading-fill" id="rLightBar" style="width:0%;background:#ffd860"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Log + Controls -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🧠 Latest AI Decisions</span>
+          <button onclick="triggerAnalysis()" style="font-size:11px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.25);color:var(--green-light);padding:4px 10px;border-radius:6px;cursor:pointer;font-family:var(--font-body);">Analyze Now</button>
+        </div>
+        <div class="card-body">
+          <div class="ai-log" id="aiLog">
+            <div class="empty-state"><h3>No analyses yet</h3><p>Add a plant and connect sensors</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">🎮 Manual Controls</span></div>
+        <div class="card-body">
+          <div class="controls-grid">
+            <div class="control-btn" id="ctrl-pump">
+              <div class="ctrl-icon">💧</div>
+              <div class="ctrl-name">Pump</div>
+              <div class="ctrl-status">Off</div>
+              <button class="btn-trigger" onclick="triggerAction('water',3)">Water 3s</button>
+            </div>
+            <div class="control-btn" id="ctrl-light">
+              <div class="ctrl-icon">💡</div>
+              <div class="ctrl-name">Light</div>
+              <div class="ctrl-status">Off</div>
+              <button class="btn-trigger" onclick="triggerAction('light_on')">Toggle</button>
+            </div>
+            <div class="control-btn" id="ctrl-fan">
+              <div class="ctrl-icon">🌀</div>
+              <div class="ctrl-name">Fan</div>
+              <div class="ctrl-status">Off</div>
+              <button class="btn-trigger" onclick="triggerAction('fan_on')">Toggle</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TREASURY PAGE -->
+  <div id="page-treasury" style="display:none">
+    <div class="topbar">
+      <div class="page-title">⬡ Treasury</div>
+      <a href="https://solana.fm" target="_blank" style="font-size:12px;color:rgba(255,255,255,0.4);text-decoration:none;">View on Solana →</a>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Treasury Balance</span></div>
+        <div class="card-body">
+          <div class="treasury-row">
+            <span class="treasury-label">Total Balance</span>
+            <span class="treasury-val green" id="treasuryBal">Loading...</span>
+          </div>
+          <div class="treasury-row">
+            <span class="treasury-label">Monthly Inflow</span>
+            <span class="treasury-val green" id="treasuryIn">--</span>
+          </div>
+          <div class="treasury-row">
+            <span class="treasury-label">Monthly Spend</span>
+            <span class="treasury-val" id="treasuryOut">--</span>
+          </div>
+          <div class="treasury-row">
+            <span class="treasury-label">Wallet</span>
+            <span class="treasury-val" style="font-size:11px;font-family:monospace;color:rgba(255,255,255,0.4)">TBD after token launch</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Fee Allocation</span></div>
+        <div class="card-body">
+          <div class="fee-bars">
+            <div class="fee-row"><span class="fee-name">AI Operations</span><div class="fee-bar-wrap"><div class="fee-bar-fill" style="width:40%"></div></div><span class="fee-pct">40%</span></div>
+            <div class="fee-row"><span class="fee-name">R&D</span><div class="fee-bar-wrap"><div class="fee-bar-fill" style="width:30%;background:#27ae60"></div></div><span class="fee-pct" style="color:#27ae60">30%</span></div>
+            <div class="fee-row"><span class="fee-name">Marketing</span><div class="fee-bar-wrap"><div class="fee-bar-fill" style="width:20%;background:#52be80"></div></div><span class="fee-pct" style="color:#52be80">20%</span></div>
+            <div class="fee-row"><span class="fee-name">Reserve</span><div class="fee-bar-wrap"><div class="fee-bar-fill" style="width:10%;background:#82e0aa"></div></div><span class="fee-pct" style="color:#82e0aa">10%</span></div>
+          </div>
+          <p style="font-size:11px;color:rgba(255,255,255,0.2);margin-top:1rem;line-height:1.6">1% of every $VRDT trade goes here. More volume = better AI = better plant care.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ADD PLANT MODAL -->
+<div class="modal-overlay" id="addPlantModal">
+  <div class="modal">
+    <h2>🌱 Add New Plant</h2>
+    <div class="form-group">
+      <label>Plant Name</label>
+      <input type="text" id="newPlantName" placeholder="e.g. Cherry Tomato #1"/>
+    </div>
+    <div class="form-group">
+      <label>Species (optional)</label>
+      <input type="text" id="newPlantSpecies" placeholder="e.g. Solanum lycopersicum"/>
+    </div>
+    <div class="form-group">
+      <label>Growth Stage</label>
+      <select id="newPlantStage">
+        <option value="seedling">Seedling</option>
+        <option value="vegetative" selected>Vegetative</option>
+        <option value="flowering">Flowering</option>
+        <option value="fruiting">Fruiting</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Care Preset</label>
+      <select id="newPlantPreset">
+        <option value="tropical" selected>Tropical</option>
+        <option value="temperate">Temperate</option>
+        <option value="desert">Desert</option>
+        <option value="mediterranean">Mediterranean</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="hideAddPlant()">Cancel</button>
+      <button class="btn-save" onclick="addPlant()">Create Plant →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Action sent</div>
+
+<script>
+const API_BASE = 'https://core-production-873a.up.railway.app';
+let session = null;
+let plants = [];
+let selectedPlantId = null;
+let sensorChart = null;
+let chartMetric = 'soil';
+
+// Init
+function init() {
+  const raw = localStorage.getItem('vp_session');
+  if (!raw) { window.location.href = 'login.html'; return; }
+  session = JSON.parse(raw);
+  if (Date.now() > session.expires) { logout(); return; }
+
+  const email = session.user?.email || 'user';
+  document.getElementById('userEmail').textContent = email;
+  document.getElementById('userInitial').textContent = email[0].toUpperCase();
+  document.getElementById('liveStatus').textContent = 'Live';
+
+  loadPlants();
+  initChart();
+  loadTreasury();
+  setInterval(refreshData, 30000);
+}
+
+function logout() {
+  localStorage.removeItem('vp_session');
+  window.location.href = 'login.html';
+}
+
+// API helper
+async function api(path, method='GET', body=null) {
+  const opts = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.token}`
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(`${API_BASE}${path}`, opts);
+  return res.json();
+}
+
+// Plants
+async function loadPlants() {
+  try {
+    const data = await api('/plants');
+    plants = data.plants || [];
+    renderPlantSelector();
+    if (plants.length > 0) {
+      selectPlant(plants[0].id);
+    }
+  } catch(e) { console.error('Load plants error:', e); }
+}
+
+function renderPlantSelector() {
+  const el = document.getElementById('plantSelector');
+  if (plants.length === 0) {
+    el.innerHTML = '<div class="plant-chip" style="opacity:0.4;cursor:default">No plants yet — add one!</div>';
+    return;
+  }
+  el.innerHTML = plants.map(p =>
+    `<div class="plant-chip ${p.id === selectedPlantId ? 'active' : ''}" onclick="selectPlant('${p.id}')">${p.name}</div>`
+  ).join('');
+}
+
+function selectPlant(id) {
+  selectedPlantId = id;
+  renderPlantSelector();
+  loadSensorData();
+  loadAILog();
+}
+
+// Sensor data
+async function loadSensorData() {
+  if (!selectedPlantId) return;
+  try {
+    const data = await api(`/plants/${selectedPlantId}/sensors?limit=24`);
+    const readings = data.readings || [];
+    if (readings.length > 0) {
+      const latest = readings[0];
+      updateStats(latest);
+      updateChart(readings);
+    }
+  } catch(e) { console.error('Sensor error:', e); }
+}
+
+function updateStats(r) {
+  const t = r.temperature != null ? r.temperature.toFixed(1) + '°' : '--';
+  const h = r.humidity != null ? Math.round(r.humidity) + '%' : '--';
+  const s = r.soil_moisture != null ? Math.round(r.soil_moisture) + '%' : '--';
+  const l = r.light_level != null ? Math.round(r.light_level) + ' lx' : '--';
+
+  document.getElementById('statTemp').textContent = t;
+  document.getElementById('statHum').textContent = h;
+  document.getElementById('statSoil').textContent = s;
+  document.getElementById('statLight').textContent = l;
+
+  document.getElementById('rTemp').textContent = t;
+  document.getElementById('rHum').textContent = h;
+  document.getElementById('rSoil').textContent = s;
+  document.getElementById('rLight').textContent = l !== '--' ? Math.round(r.light_level) + ' lx' : '--';
+
+  document.getElementById('rTempBar').style.width = r.temperature ? Math.min((r.temperature/50)*100,100)+'%' : '0%';
+  document.getElementById('rHumBar').style.width = r.humidity ? Math.min(r.humidity,100)+'%' : '0%';
+  document.getElementById('rSoilBar').style.width = r.soil_moisture ? Math.min(r.soil_moisture,100)+'%' : '0%';
+  document.getElementById('rLightBar').style.width = r.light_level ? Math.min((r.light_level/10000)*100,100)+'%' : '0%';
+}
+
+// Chart
+function initChart() {
+  const ctx = document.getElementById('sensorChart').getContext('2d');
+  sensorChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: [], datasets: [{
+      label: 'Soil Moisture %',
+      data: [],
+      borderColor: '#2ecc71',
+      backgroundColor: 'rgba(46,204,113,0.08)',
+      borderWidth: 2,
+      pointRadius: 2,
+      tension: 0.4,
+      fill: true
+    }]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: 'rgba(255,255,255,0.25)', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        y: { ticks: { color: 'rgba(255,255,255,0.25)', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+}
+
+function updateChart(readings) {
+  const rev = [...readings].reverse();
+  const labels = rev.map(r => new Date(r.recorded_at).toLocaleTimeString('en', {hour:'2-digit',minute:'2-digit'}));
+  const metricMap = { soil: 'soil_moisture', temp: 'temperature', hum: 'humidity' };
+  const colorMap = { soil: '#2ecc71', temp: '#ff9060', hum: '#90b4ff' };
+  const key = metricMap[chartMetric];
+  sensorChart.data.labels = labels;
+  sensorChart.data.datasets[0].data = rev.map(r => r[key] != null ? parseFloat(r[key].toFixed(1)) : null);
+  sensorChart.data.datasets[0].borderColor = colorMap[chartMetric];
+  sensorChart.data.datasets[0].backgroundColor = colorMap[chartMetric] + '15';
+  sensorChart.update();
+}
+
+function switchChart(metric, btn) {
+  chartMetric = metric;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadSensorData();
+}
+
+// AI Log
+async function loadAILog() {
+  if (!selectedPlantId) return;
+  try {
+    const data = await api(`/plants/${selectedPlantId}/logs?limit=5`);
+    const analyses = await api(`/plants/${selectedPlantId}/analysis?limit=5`).catch(() => ({analyses:[]}));
+    const items = (analyses.analyses || data.logs || []).slice(0,5);
+    const el = document.getElementById('aiLog');
+    if (!items || items.length === 0) {
+      el.innerHTML = '<div class="empty-state"><h3>No AI analyses yet</h3><p>Click "Analyze Now" to trigger first analysis</p></div>';
+      return;
+    }
+    el.innerHTML = items.map(a => `
+      <div class="log-item">
+        <div class="log-status status-${a.status || 'healthy'}"></div>
+        <div class="log-content">
+          <div class="log-reasoning">${a.reasoning || a.action_type || 'Analysis complete'}</div>
+          <div class="log-meta">${new Date(a.created_at || a.executed_at).toLocaleString()}</div>
+          ${(a.actions_taken && a.actions_taken.length > 0) ? `<div class="log-actions">${a.actions_taken.map(ac => `<span class="action-tag">${ac.action || ac}</span>`).join('')}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } catch(e) { console.error('AI log error:', e); }
+}
+
+// Actions
+async function triggerAnalysis() {
+  if (!selectedPlantId) { showToast('Select a plant first'); return; }
+  showToast('🧠 Running AI analysis...');
+  try {
+    await api(`/plants/${selectedPlantId}/analyze`, 'POST');
+    showToast('✓ Analysis complete');
+    loadAILog();
+    loadSensorData();
+  } catch(e) { showToast('Analysis failed'); }
+}
+
+async function triggerAction(action, duration=null) {
+  if (!selectedPlantId) { showToast('Select a plant first'); return; }
+  try {
+    const body = { action };
+    if (duration) body.duration = duration;
+    await api(`/plants/${selectedPlantId}/actions`, 'POST', body);
+    showToast(`✓ ${action} sent to hardware`);
+  } catch(e) { showToast('Action failed'); }
+}
+
+// Treasury
+async function loadTreasury() {
+  try {
+    const data = await api('/treasury');
+    document.getElementById('treasuryBal').textContent = data.balance_usd != null ? `$${data.balance_usd.toFixed(2)}` : 'TBD';
+    document.getElementById('treasuryIn').textContent = data.total_inflow_usd != null ? `$${data.total_inflow_usd.toFixed(2)}` : '--';
+    document.getElementById('treasuryOut').textContent = data.total_outflow_usd != null ? `$${data.total_outflow_usd.toFixed(2)}` : '--';
+  } catch(e) { document.getElementById('treasuryBal').textContent = 'TBD'; }
+}
+
+// Add plant
+function showAddPlant() { document.getElementById('addPlantModal').classList.add('show'); }
+function hideAddPlant() { document.getElementById('addPlantModal').classList.remove('show'); }
+
+async function addPlant() {
+  const name = document.getElementById('newPlantName').value.trim();
+  if (!name) { showToast('Enter a plant name'); return; }
+  try {
+    await api('/plants', 'POST', {
+      name,
+      species: document.getElementById('newPlantSpecies').value,
+      growth_stage: document.getElementById('newPlantStage').value,
+      care_preset: document.getElementById('newPlantPreset').value
+    });
+    hideAddPlant();
+    showToast('🌱 Plant added!');
+    loadPlants();
+  } catch(e) { showToast('Failed to add plant'); }
+}
+
+// Page navigation
+function switchPage(page) {
+  document.querySelectorAll('[id^="page-"]').forEach(el => el.style.display = 'none');
+  const el = document.getElementById(`page-${page}`);
+  if (el) el.style.display = 'block';
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  event.target.closest('.nav-item').classList.add('active');
+}
+
+// Refresh
+function refreshData() { loadSensorData(); loadAILog(); }
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
